@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Formulario de llegada — Parte de Cargas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#f0f2f5; --bg2:#fff; --bg3:#f5f6f8;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.15);
+  --c1:#2e6da4; --c2:#1a3d5c;
+  --text:#1e2330; --text2:#5a6275; --text3:#9aa0ad;
+  --urgent:#c0365a;
+  --radius:8px; --radius-lg:12px; --shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:640px;box-shadow:var(--shadow);}
+
+.card-header{margin-bottom:1.5rem;}
+.card-title{font-size:20px;font-weight:600;color:var(--c1);margin-bottom:4px;}
+.card-sub{font-size:13px;color:var(--text2);}
+
+/* LANG */
+.lang-bar{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.lang-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:5px 12px;border-radius:20px;cursor:pointer;font-size:12px;font-family:inherit;transition:all .15s;}
+.lang-btn.active{background:rgba(46,109,164,0.1);border-color:var(--c1);color:var(--c1);}
+
+/* FORM */
+.section-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1rem;}
+.section-block-title{font-size:11px;font-weight:600;color:var(--c1);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.875rem;}
+.form-group{margin-bottom:.875rem;}
+.form-label{display:block;font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.req{color:var(--urgent);}
+.form-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--c1);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+
+/* MULTI */
+.multi-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem;}
+.multi-row .form-input{flex:1;}
+.btn-add-field{background:none;border:1px dashed var(--border2);color:var(--text2);border-radius:var(--radius);padding:7px 12px;cursor:pointer;font-size:12px;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:4px;margin-top:.25rem;}
+.btn-add-field:hover{border-color:var(--c1);color:var(--c1);}
+.btn-del{background:none;border:1px solid rgba(192,54,90,.3);color:#c0365a;border-radius:var(--radius);padding:6px 10px;cursor:pointer;font-size:12px;font-family:inherit;flex-shrink:0;}
+.btn-del:hover{background:rgba(192,54,90,.07);}
+
+/* SUBMIT */
+.btn-submit{width:100%;background:var(--c1);color:#fff;border:none;border-radius:var(--radius);padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s;margin-top:.5rem;}
+.btn-submit:hover{opacity:.85;}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;}
+
+/* STATES */
+.error-msg{color:var(--urgent);font-size:13px;margin-top:.75rem;display:none;background:rgba(192,54,90,.07);border:1px solid rgba(192,54,90,.2);border-radius:var(--radius);padding:.6rem .875rem;}
+.success-box{display:none;background:#d8f5e8;border:1px solid #60c890;border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center;margin-top:1rem;}
+.success-icon{font-size:48px;margin-bottom:1rem;}
+.success-title{font-size:20px;font-weight:600;color:#0f5c30;margin-bottom:.5rem;}
+.success-sub{font-size:14px;color:#1a7a45;}
+
+/* LEYENDA */
+.req-note{font-size:12px;color:var(--text3);margin-bottom:1.25rem;}
+
+@media(max-width:500px){.form-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="card" id="main-card">
+
+  <div class="card-header">
+    <div class="card-title" id="tl-title">Formulario de llegada</div>
+    <div class="card-sub" id="tl-sub">Rellene los datos antes de acceder al muelle</div>
+  </div>
+
+  <!-- IDIOMAS -->
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('es',this)">🇪🇸 ES</button>
+    <button class="lang-btn" onclick="setLang('en',this)">🇬🇧 EN</button>
+    <button class="lang-btn" onclick="setLang('fr',this)">🇫🇷 FR</button>
+    <button class="lang-btn" onclick="setLang('de',this)">🇩🇪 DE</button>
+    <button class="lang-btn" onclick="setLang('pl',this)">🇵🇱 PL</button>
+    <button class="lang-btn" onclick="setLang('ro',this)">🇷🇴 RO</button>
+  </div>
+
+  <p class="req-note" id="tl-req-note">Los campos marcados con <span class="req">*</span> son obligatorios.</p>
+
+  <!-- REFERENCIAS DE CARGA -->
+  <div class="section-block">
+    <div class="section-block-title" id="tl-sec-refs">Referencias de carga</div>
+    <div class="form-group">
+      <label class="form-label"><span id="tl-refcarga">Referencia de carga</span> <span class="req">*</span></label>
+      <div id="refs-container"></div>
+      <button class="btn-add-field" id="btn-add-ref" onclick="addField('refs-container','ref')">+ Añadir referencia</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label"><span id="tl-consegna">Consegna(s)</span></label>
+      <div id="consegnas-container"></div>
+      <button class="btn-add-field" id="btn-add-consegna" onclick="addField('consegnas-container','consegna')">+ Añadir consegna</button>
+    </div>
+  </div>
+
+  <!-- VEHÍCULO -->
+  <div class="section-block">
+    <div class="section-block-title" id="tl-sec-vehicle">Vehículo</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label"><span id="tl-matricula">Matrícula</span> <span class="req">*</span></label>
+        <input class="form-input" id="f-matricula" placeholder="0000 XXX" autocomplete="off"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="tl-remolque">Matrícula remolque</label>
+        <input class="form-input" id="f-remolque" placeholder="—"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONDUCTOR -->
+  <div class="section-block">
+    <div class="section-block-title" id="tl-sec-driver">Conductor</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label"><span id="tl-conductor">Nombre del conductor</span> <span class="req">*</span></label>
+        <input class="form-input" id="f-conductor" placeholder="Nombre y apellidos"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label"><span id="tl-dni">DNI / Pasaporte</span> <span class="req">*</span></label>
+        <input class="form-input" id="f-dni" placeholder="00000000X"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPRESA -->
+  <div class="section-block">
+    <div class="section-block-title" id="tl-sec-company">Empresa</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label"><span id="tl-empresa">Empresa de transporte</span> <span class="req">*</span></label>
+        <input class="form-input" id="f-empresa" placeholder="Empresa"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="tl-nif">NIF empresa</label>
+        <input class="form-input" id="f-nif" placeholder="B00000000"/>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-submit" id="btn-enviar" onclick="enviar()">
+    <span id="tl-enviar">Enviar</span>
+  </button>
+  <div class="error-msg" id="error-msg"></div>
+  <div id="cfg-hint" style="display:none;margin-top:.75rem;background:#fff8d6;border:1px solid #e8d060;border-radius:8px;padding:.75rem 1rem;font-size:13px;color:#7a6000;">
+    ⚙ <strong>Configuración:</strong> Pega la URL del Apps Script para activar el envío.
+    <button onclick="showCfg()" style="margin-left:.5rem;background:none;border:1px solid #e8d060;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:12px;color:#7a6000;">Configurar</button>
+  </div>
+
+</div>
+
+<!-- ÉXITO -->
+<div class="success-box" id="success-box">
+  <div class="success-icon">✅</div>
+  <div class="success-title" id="tl-ok-title">¡Datos recibidos!</div>
+  <div class="success-sub" id="tl-ok-sub">Le atenderemos en breve. Por favor espere en la zona de espera.</div>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────
+let GS_URL = localStorage.getItem('pc_gs_url') || '';
+
+function showCfg() {
+  document.getElementById('cfg-url').value = GS_URL;
+  document.getElementById('cfg-test-res').textContent = '';
+  document.getElementById('modal-cfg').classList.add('open');
+}
+function closeCfg() { document.getElementById('modal-cfg').classList.remove('open'); }
+function saveCfg() {
+  const url = document.getElementById('cfg-url').value.trim();
+  if (!url) { alert('Pega la URL'); return; }
+  GS_URL = url; localStorage.setItem('pc_gs_url', url);
+  closeCfg();
+  document.getElementById('cfg-hint').style.display = 'none';
+}
+async function testCfg() {
+  const url = document.getElementById('cfg-url').value.trim();
+  const el  = document.getElementById('cfg-test-res');
+  if (!url) { alert('Pega primero la URL'); return; }
+  el.textContent = '⏳ Probando…'; el.style.color = '';
+  try {
+    const res  = await fetch(url, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({action:'ping'}) });
+    const json = await res.json();
+    if (json.ok) { el.textContent = '✅ Conexión OK'; el.style.color = '#1a7a3d'; }
+    else throw new Error(json.error||'Error');
+  } catch(e) { el.textContent = '❌ ' + e.message; el.style.color = '#c0365a'; }
+}
+
+// ── TRADUCCIONES ──────────────────────────────────────────────────
+const T = {
+  es:{
+    title:'Formulario de llegada', sub:'Rellene los datos antes de acceder al muelle',
+    reqNote:'Los campos marcados con * son obligatorios.',
+    secRefs:'Referencias de carga', secVehicle:'Vehículo', secDriver:'Conductor', secCompany:'Empresa',
+    refcarga:'Referencia de carga', consegna:'Consegna(s)',
+    matricula:'Matrícula', remolque:'Matrícula remolque',
+    conductor:'Nombre del conductor', dni:'DNI / Pasaporte',
+    empresa:'Empresa de transporte', nif:'NIF empresa',
+    addRef:'+ Añadir referencia', addConsegna:'+ Añadir consegna',
+    enviar:'Enviar',
+    okTitle:'¡Datos recibidos!', okSub:'Le atenderemos en breve. Por favor espere en la zona de espera.',
+    err:'Por favor, rellene todos los campos obligatorios marcados con *',
+    sending:'Enviando…', errNet:'Error de red. Comprueba la conexión e inténtalo de nuevo.'
+  },
+  en:{
+    title:'Arrival form', sub:'Please fill in your details before accessing the dock',
+    reqNote:'Fields marked with * are required.',
+    secRefs:'Load references', secVehicle:'Vehicle', secDriver:'Driver', secCompany:'Company',
+    refcarga:'Load reference', consegna:'Consignment(s)',
+    matricula:'Plate number', remolque:'Trailer plate',
+    conductor:'Driver name', dni:'ID / Passport',
+    empresa:'Transport company', nif:'Company tax ID',
+    addRef:'+ Add reference', addConsegna:'+ Add consignment',
+    enviar:'Submit',
+    okTitle:'Data received!', okSub:'We will attend to you shortly. Please wait in the waiting area.',
+    err:'Please fill in all required fields marked with *',
+    sending:'Sending…', errNet:'Network error. Check your connection and try again.'
+  },
+  fr:{
+    title:'Formulaire d\'arrivée', sub:'Veuillez remplir vos coordonnées avant d\'accéder au quai',
+    reqNote:'Les champs marqués d\'un * sont obligatoires.',
+    secRefs:'Références de chargement', secVehicle:'Véhicule', secDriver:'Chauffeur', secCompany:'Entreprise',
+    refcarga:'Référence de chargement', consegna:'Consignation(s)',
+    matricula:'Immatriculation', remolque:'Immatriculation remorque',
+    conductor:'Nom du chauffeur', dni:'CNI / Passeport',
+    empresa:'Entreprise de transport', nif:'N° TVA entreprise',
+    addRef:'+ Ajouter référence', addConsegna:'+ Ajouter consignation',
+    enviar:'Envoyer',
+    okTitle:'Données reçues !', okSub:'Nous vous prendrons en charge sous peu. Veuillez patienter.',
+    err:'Veuillez remplir tous les champs obligatoires marqués d\'un *',
+    sending:'Envoi en cours…', errNet:'Erreur réseau. Vérifiez votre connexion.'
+  },
+  de:{
+    title:'Ankunftsformular', sub:'Bitte füllen Sie Ihre Daten aus, bevor Sie das Dock betreten',
+    reqNote:'Mit * markierte Felder sind Pflichtfelder.',
+    secRefs:'Ladereferenzen', secVehicle:'Fahrzeug', secDriver:'Fahrer', secCompany:'Unternehmen',
+    refcarga:'Ladereferenz', consegna:'Lieferung(en)',
+    matricula:'Kennzeichen', remolque:'Anhängerkennzeichen',
+    conductor:'Name des Fahrers', dni:'Ausweis / Reisepass',
+    empresa:'Transportunternehmen', nif:'USt-IdNr.',
+    addRef:'+ Referenz hinzufügen', addConsegna:'+ Lieferung hinzufügen',
+    enviar:'Absenden',
+    okTitle:'Daten erhalten!', okSub:'Wir werden Sie in Kürze betreuen. Bitte warten Sie im Wartebereich.',
+    err:'Bitte füllen Sie alle Pflichtfelder aus (markiert mit *)',
+    sending:'Wird gesendet…', errNet:'Netzwerkfehler. Verbindung prüfen.'
+  },
+  pl:{
+    title:'Formularz przyjazdu', sub:'Proszę wypełnić dane przed wjazdem na rampę',
+    reqNote:'Pola oznaczone * są wymagane.',
+    secRefs:'Referencje ładunku', secVehicle:'Pojazd', secDriver:'Kierowca', secCompany:'Firma',
+    refcarga:'Referencja ładunku', consegna:'Numer(y) dostawy',
+    matricula:'Nr rejestracyjny', remolque:'Nr rejestracyjny naczepy',
+    conductor:'Imię i nazwisko kierowcy', dni:'Dowód / Paszport',
+    empresa:'Firma transportowa', nif:'NIP firmy',
+    addRef:'+ Dodaj referencję', addConsegna:'+ Dodaj dostawę',
+    enviar:'Wyślij',
+    okTitle:'Dane otrzymane!', okSub:'Wkrótce się z Tobą zajmiemy. Proszę czekać.',
+    err:'Proszę wypełnić wszystkie wymagane pola oznaczone *',
+    sending:'Wysyłanie…', errNet:'Błąd sieci. Sprawdź połączenie.'
+  },
+  ro:{
+    title:'Formular de sosire', sub:'Completați datele înainte de a accesa docul',
+    reqNote:'Câmpurile marcate cu * sunt obligatorii.',
+    secRefs:'Referințe de încărcare', secVehicle:'Vehicul', secDriver:'Șofer', secCompany:'Companie',
+    refcarga:'Referință de încărcare', consegna:'Consignare(ări)',
+    matricula:'Nr. înmatriculare', remolque:'Nr. înmatriculare remorcă',
+    conductor:'Numele șoferului', dni:'Buletin / Pașaport',
+    empresa:'Companie de transport', nif:'CUI companie',
+    addRef:'+ Adaugă referință', addConsegna:'+ Adaugă consignare',
+    enviar:'Trimite',
+    okTitle:'Date primite!', okSub:'Vă vom prelua în scurt timp. Vă rugăm așteptați.',
+    err:'Vă rugăm completați toate câmpurile obligatorii marcate cu *',
+    sending:'Se trimite…', errNet:'Eroare de rețea. Verificați conexiunea.'
+  }
+};
+
+let lang = 'es';
+
+function setLang(l, btn) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const t = T[l];
+  document.getElementById('tl-title').textContent         = t.title;
+  document.getElementById('tl-sub').textContent           = t.sub;
+  document.getElementById('tl-req-note').innerHTML        = t.reqNote.replace('*','<span class="req">*</span>');
+  document.getElementById('tl-sec-refs').textContent      = t.secRefs;
+  document.getElementById('tl-sec-vehicle').textContent   = t.secVehicle;
+  document.getElementById('tl-sec-driver').textContent    = t.secDriver;
+  document.getElementById('tl-sec-company').textContent   = t.secCompany;
+  document.getElementById('tl-refcarga').textContent      = t.refcarga;
+  document.getElementById('tl-consegna').textContent      = t.consegna;
+  document.getElementById('tl-matricula').textContent     = t.matricula;
+  document.getElementById('tl-remolque').textContent      = t.remolque;
+  document.getElementById('tl-conductor').textContent     = t.conductor;
+  document.getElementById('tl-dni').textContent           = t.dni;
+  document.getElementById('tl-empresa').textContent       = t.empresa;
+  document.getElementById('tl-nif').textContent           = t.nif;
+  document.getElementById('btn-add-ref').textContent      = t.addRef;
+  document.getElementById('btn-add-consegna').textContent = t.addConsegna;
+  document.getElementById('tl-enviar').textContent        = t.enviar;
+  document.getElementById('tl-ok-title').textContent      = t.okTitle;
+  document.getElementById('tl-ok-sub').textContent        = t.okSub;
+}
+
+// ── MULTI-FIELD ───────────────────────────────────────────────────
+function addField(containerId, name) {
+  const c   = document.getElementById(containerId);
+  const row = document.createElement('div');
+  row.className = 'multi-row';
+  row.innerHTML = `<input class="form-input" name="${name}" placeholder="—" autocomplete="off"/>
+    <button class="btn-del" onclick="this.parentNode.remove()" type="button">✕</button>`;
+  c.appendChild(row);
+}
+function getValues(containerId) {
+  return [...document.getElementById(containerId).querySelectorAll('input')]
+    .map(i => i.value.trim()).filter(Boolean);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+addField('refs-container',     'ref');
+addField('consegnas-container','consegna');
+if (!GS_URL) document.getElementById('cfg-hint').style.display = 'block';
+
+// ── ENVIAR ────────────────────────────────────────────────────────
+async function enviar() {
+  const t         = T[lang];
+  const refs      = getValues('refs-container');
+  const consegnas = getValues('consegnas-container');
+  const matricula = document.getElementById('f-matricula').value.trim();
+  const conductor = document.getElementById('f-conductor').value.trim();
+  const dni       = document.getElementById('f-dni').value.trim();
+  const empresa   = document.getElementById('f-empresa').value.trim();
+  const errEl     = document.getElementById('error-msg');
+
+  if (!refs.length || !matricula || !conductor || !dni || !empresa) {
+    errEl.textContent = t.err;
+    errEl.style.display = 'block';
+    errEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+  errEl.style.display = 'none';
+
+  if (!GS_URL) { showCfg(); return; }
+
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  document.getElementById('tl-enviar').textContent = t.sending;
+
+  const datos = {
+    refs, consegnas, matricula,
+    remolque:  document.getElementById('f-remolque').value.trim(),
+    conductor, dni, empresa,
+    nif: document.getElementById('f-nif').value.trim(),
+    ts:  new Date().toISOString()
+  };
+
+  try {
+    const res  = await fetch(GS_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body:    JSON.stringify({ action: 'submitTransportista', datos })
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'Error del servidor');
+
+    // Éxito
+    document.getElementById('main-card').style.display  = 'none';
+    document.getElementById('success-box').style.display = 'block';
+    window.scrollTo(0, 0);
+
+  } catch(e) {
+    errEl.textContent    = t.errNet + ' (' + e.message + ')';
+    errEl.style.display  = 'block';
+    btn.disabled         = false;
+    document.getElementById('tl-enviar').textContent = t.enviar;
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.tagName === 'INPUT') enviar();
+});
+</script>
+<style>
+.modal-overlay2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay2.open{display:flex;}
+.modal2{background:#fff;border-radius:12px;padding:1.75rem;width:100%;max-width:560px;box-shadow:0 8px 40px rgba(0,0,0,.2);position:relative;}
+.modal2-title{font-size:17px;font-weight:600;color:var(--c1);margin-bottom:1rem;}
+.modal2 ol{font-size:13px;color:var(--text2);line-height:2.1;padding-left:1.2rem;margin-bottom:1.25rem;}
+.modal2 .form-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;}
+.modal2 .form-input{width:100%;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:10px 12px;font-size:12px;font-family:monospace;outline:none;}
+.modal2 .form-input:focus{border-color:var(--c1);}
+.modal2-btns{display:flex;gap:.75rem;margin-top:.875rem;flex-wrap:wrap;align-items:center;}
+.btn-cfg-save{background:var(--c1);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;}
+.btn-cfg-test{background:#f0f2f5;color:var(--text);border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:10px 18px;font-size:13px;cursor:pointer;font-family:inherit;}
+#cfg-test-res{font-size:13px;}
+.btn-cfg-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);}
+</style>
+
+<div class="modal-overlay2" id="modal-cfg" onclick="if(event.target===this)closeCfg()">
+  <div class="modal2">
+    <button class="btn-cfg-close" onclick="closeCfg()">✕</button>
+    <div class="modal2-title">⚙ Conectar con Google Sheets</div>
+    <ol>
+      <li>Usa el <strong>mismo Apps Script</strong> que configuraste en el Parte de Cargas</li>
+      <li>Copia la URL del Web App y pégala aquí abajo</li>
+      <li>Haz clic en <strong>Guardar URL</strong> — listo, el formulario ya envía a Google Sheets</li>
+    </ol>
+    <label class="form-label">URL del Web App (Apps Script)</label>
+    <input class="form-input" id="cfg-url" placeholder="https://script.google.com/macros/s/…/exec"/>
+    <div class="modal2-btns">
+      <button class="btn-cfg-save" onclick="saveCfg()">💾 Guardar URL</button>
+      <button class="btn-cfg-test" onclick="testCfg()">🔌 Probar conexión</button>
+      <span id="cfg-test-res"></span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
