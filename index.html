@@ -162,6 +162,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   <div class="success-icon">✅</div>
   <div class="success-title" id="tl-ok-title">¡Datos recibidos!</div>
   <div class="success-sub" id="tl-ok-sub">Le atenderemos en breve. Por favor espere en la zona de espera.</div>
+  <div style="margin-top:1rem;font-size:12px;color:#1a7a45;opacity:.8">El formulario se reiniciará en 5 segundos...</div>
 </div>
 
 <script>
@@ -376,6 +377,21 @@ async function enviar() {
     document.getElementById('main-card').style.display  = 'none';
     document.getElementById('success-box').style.display = 'block';
     window.scrollTo(0, 0);
+    // Volver al formulario limpio después de 5 segundos
+    setTimeout(() => {
+      document.getElementById('success-box').style.display = 'none';
+      document.getElementById('main-card').style.display = 'block';
+      document.getElementById('refs-container').innerHTML = '';
+      document.getElementById('consegnas-container').innerHTML = '';
+      addField('refs-container','ref');
+      addField('consegnas-container','consegna');
+      ['f-matricula','f-remolque','f-conductor','f-dni','f-empresa','f-nif'].forEach(id=>{
+        document.getElementById(id).value='';
+      });
+      btn.disabled = false;
+      document.getElementById('tl-enviar').textContent = T[lang].enviar;
+      window.scrollTo(0, 0);
+    }, 5000);
 
   } catch(e) {
     errEl.textContent    = t.errNet + ' (' + e.message + ')';
