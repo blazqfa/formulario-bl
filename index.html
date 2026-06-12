@@ -88,13 +88,13 @@ input[type="text"], input[type="tel"], textarea, select {
     <button class="lang-btn" onclick="setLang('ro',this)">🇷🇴 RO</button>
   </div>
 
-  <p class="req-note" id="tl-req-note">Los campos marcados con <span class="req">*</span> son obligatorios.</p>
+  <p class="req-note" id="tl-req-note" style="display:none">Los campos marcados con son obligatorios.</p>
 
   <!-- REFERENCIAS DE CARGA -->
   <div class="section-block">
     <div class="section-block-title" id="tl-sec-refs">Referencias de carga</div>
     <div class="form-group">
-      <label class="form-label"><span id="tl-refcarga">Referencia de carga</span> <span class="req">*</span></label>
+      <label class="form-label"><span id="tl-refcarga">Referencia de carga</span></label>
       <div id="refs-container"></div>
       <button class="btn-add-field" id="btn-add-ref" onclick="addField('refs-container','ref')">+ Añadir referencia</button>
     </div>
@@ -110,7 +110,7 @@ input[type="text"], input[type="tel"], textarea, select {
     <div class="section-block-title" id="tl-sec-vehicle">Vehículo</div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label"><span id="tl-matricula">Matrícula</span> <span class="req">*</span></label>
+        <label class="form-label"><span id="tl-matricula">Matrícula</span></label>
         <input class="form-input" id="f-matricula" placeholder="0000 XXX" autocomplete="off"/>
       </div>
       <div class="form-group">
@@ -125,11 +125,11 @@ input[type="text"], input[type="tel"], textarea, select {
     <div class="section-block-title" id="tl-sec-driver">Conductor</div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label"><span id="tl-conductor">Nombre del conductor</span> <span class="req">*</span></label>
+        <label class="form-label"><span id="tl-conductor">Nombre del conductor</span></label>
         <input class="form-input" id="f-conductor" placeholder="Nombre y apellidos"/>
       </div>
       <div class="form-group">
-        <label class="form-label"><span id="tl-dni">DNI / Pasaporte</span> <span class="req">*</span></label>
+        <label class="form-label"><span id="tl-dni">DNI / Pasaporte</span></label>
         <input class="form-input" id="f-dni" placeholder="00000000X"/>
       </div>
     </div>
@@ -140,7 +140,7 @@ input[type="text"], input[type="tel"], textarea, select {
     <div class="section-block-title" id="tl-sec-company">Empresa</div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label"><span id="tl-empresa">Empresa de transporte</span> <span class="req">*</span></label>
+        <label class="form-label"><span id="tl-empresa">Empresa de transporte</span></label>
         <input class="form-input" id="f-empresa" placeholder="Empresa"/>
       </div>
       <div class="form-group">
@@ -296,7 +296,7 @@ function setLang(l, btn) {
   const t = T[l];
   document.getElementById('tl-title').textContent         = t.title;
   document.getElementById('tl-sub').textContent           = t.sub;
-  document.getElementById('tl-req-note').innerHTML        = t.reqNote.replace('*','<span class="req">*</span>');
+  document.getElementById('tl-req-note').innerHTML        = t.reqNote.replace('*','');
   document.getElementById('tl-sec-refs').textContent      = t.secRefs;
   document.getElementById('tl-sec-vehicle').textContent   = t.secVehicle;
   document.getElementById('tl-sec-driver').textContent    = t.secDriver;
